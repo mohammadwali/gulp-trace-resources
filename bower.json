@@ -1,0 +1,17 @@
+{
+  "name": "gulp-trace-resources",
+  "description": "Find all the resources used by a html file and build a json file with the results",
+  "main": "index.js",
+  "authors": [
+    "Mohammad Wali <mohdwali@live.com>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

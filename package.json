@@ -1,0 +1,21 @@
+{
+  "name": "gulp-trace-resources",
+  "version": "1.0.0",
+  "description": "Find all the resources used by a html file and build a json file with the results",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mohammad Wali <mohdwali@live.com>",
+  "license": "ISC",
+  "dependencies": {
+    "htmlparser": "^1.7.7",
+    "path": "^0.12.7",
+    "rext": "0.0.6",
+    "through2": "^2.0.1",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "gulp": "github:gulpjs/gulp#4.0"
+  }
+}
