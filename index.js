@@ -98,14 +98,21 @@ function getImages(data, type) {
 
 
 function getScripts(data, type) {
-    var html = _.find(data, {type: "tag", name: "html"});
-    var head = _.find(html.children, {type: "tag", "name": "head"});
-    var body = _.find(html.children, {type: "tag", "name": "body"});
     var scripts = [];
+    var html = _.find(data, {type: "tag", name: "html"});
+    if (typeof html !== "undefined") {
+        var head = _.find(html.children, {type: "tag", "name": "head"});
+        var body = _.find(html.children, {type: "tag", "name": "body"});
 
-    lookForScripts(head);
-    lookForScripts(body);
+        if (typeof head !== "undefined") {
+            lookForScripts(head);
+        }
 
+        if (typeof  body !== "undefined") {
+            lookForScripts(body);
+        }
+
+    }
     return scripts;
 
     function lookForScripts(element) {
@@ -139,37 +146,39 @@ function getScripts(data, type) {
 
 
 function getStyleSheets(data, type) {
+    var styleSheets = [];
     var html = _.find(data, {type: "tag", name: "html"});
-    var head = _.find(html.children, {type: "tag", "name": "head"});
-    var styleSheets;
+    if (typeof html !== "undefined") {
+        var head = _.find(html.children, {type: "tag", "name": "head"});
+        if (typeof head !== "undefined") {
+
+            styleSheets = _.filter(head.children, function (child) {
+                var isStyleSheet;
+                var isLocal;
+                var localOrExternal;
 
 
-    styleSheets = _.filter(head.children, function (child) {
-        var isStyleSheet;
-        var isLocal;
-        var localOrExternal;
+                if (type === "local" || type === "external") {
+                    isStyleSheet = child.type === "tag" && child.name === "link" && child.attribs.rel === "stylesheet";
+                    if (isStyleSheet) {
+                        isLocal = (child.attribs) ? !isUrl(child.attribs.href) : false;
+                        localOrExternal = (type === "local") ? isLocal : !isLocal;
+                        return (isStyleSheet && localOrExternal);
+                    }
+                } else {
+
+                    isStyleSheet = (child.type === "style" && child.name === "style");
+                }
 
 
-        if (type === "local" || type === "external") {
-            isStyleSheet = child.type === "tag" && child.name === "link" && child.attribs.rel === "stylesheet";
-            if (isStyleSheet) {
-                isLocal = (child.attribs) ? !isUrl(child.attribs.href) : false;
-                localOrExternal = (type === "local") ? isLocal : !isLocal;
-                return (isStyleSheet && localOrExternal);
-            }
-        } else {
+                return isStyleSheet;
+            });
 
-            isStyleSheet = (child.type === "style" && child.name === "style");
+            styleSheets = _.map(styleSheets, function (child) {
+                return (type === "local" || type === "external") ? child.attribs.href : child.children[0].raw;
+            });
         }
-
-
-        return isStyleSheet;
-    });
-
-    styleSheets = _.map(styleSheets, function (child) {
-        return (type === "local" || type === "external") ? child.attribs.href : child.children[0].raw;
-    });
-
+    }
 
     return styleSheets;
 }
