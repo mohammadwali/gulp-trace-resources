@@ -8,7 +8,8 @@ var htmlparser = require("htmlparser");
 module.exports = traceResources;
 
 
-function traceResources(options, callback) {
+function traceResources(options) {
+    options = options || {};
 
     return through.obj(buffer, end);
 
@@ -47,8 +48,12 @@ function traceResources(options, callback) {
             resources.inline = getResources(jsonDOM, "inline");
             resources.external = getResources(jsonDOM, "external");
 
+
             file.contents = new Buffer(JSON.stringify(resources), "utf8");
-            file.path = rext(file.path, ".json");
+
+            if (options.replaceExt) {
+                file.path = rext(file.path, ".json");
+            }
 
             that.push(file);
             cb();
